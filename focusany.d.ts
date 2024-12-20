@@ -29,6 +29,7 @@ declare type ActionMatch = (
     | ActionMatchFile
     | ActionMatchImage
     | ActionMatchWindow
+    | ActionMatchEditor
     )
 
 declare enum ActionMatchTypeEnum {
@@ -38,16 +39,17 @@ declare enum ActionMatchTypeEnum {
     IMAGE = 'image',
     FILE = 'file',
     WINDOW = 'window',
+    EDITOR = 'editor',
 }
 
 type SearchQuery = {
     keywords: string,
-    currentFiles?: ClipboardFileItem[],
+    currentFiles?: FileItem[],
     currentImage?: string,
     currentText?: string,
 }
 
-type ClipboardFileItem = {
+type FileItem = {
     name: string,
     isDirectory: boolean,
     isFile: boolean,
@@ -90,8 +92,14 @@ declare type ActionMatchImage = ActionMatchBase & {
 }
 
 declare type ActionMatchWindow = ActionMatchBase & {
-    title: string,
+    nameRegex: string,
     titleRegex: string,
+    attrRegex: Record<string, string>,
+}
+
+declare type ActionMatchEditor = ActionMatchBase & {
+    extensions: string[],
+    faDataTypes: string[],
 }
 
 interface PluginAction {
@@ -109,6 +117,7 @@ interface FocusAnyApi {
         callback: (data: {
             actionName: string,
             actionMatch: ActionMatch | null,
+            actionMatchFiles: FileItem[],
             requestId: string,
         }) => void
     ): void;
@@ -185,7 +194,17 @@ interface FocusAnyApi {
     }): (string[]) | (undefined)
 
 
-    showSaveDialog(options: any): any;
+    showSaveDialog(options: {
+        title?: string,
+        defaultPath?: string,
+        buttonLabel?: string,
+        filters?: { name: string, extensions: string[] }[],
+        message?: string,
+        nameFieldLabel?: string,
+        showsTagField?: string,
+        properties?: Array<'showHiddenFiles' | 'createDirectory' | 'treatPackageAsDirectory' | 'showOverwriteConfirmation' | 'dontAddToRecent'>,
+        securityScopedBookmarks?: boolean
+    }): (string) | (undefined);
 
     screenCapture(callback: (imgBase64: string) => void): void;
 
@@ -207,7 +226,7 @@ interface FocusAnyApi {
 
     getClipboardImage(): string;
 
-    getClipboardFiles(): ClipboardFileItem[];
+    getClipboardFiles(): FileItem[];
 
     shellOpenPath(fullPath: string): void;
 
@@ -271,6 +290,9 @@ interface FocusAnyApi {
         base64Encode(data: any): string;
         base64Decode(data: string): any;
         md5(data: string): string;
+        save(filename: string, data: string | Uint8Array, option?: {
+            isBase64?: boolean,
+        }): boolean;
     };
 }
 
