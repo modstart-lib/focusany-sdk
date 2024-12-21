@@ -103,234 +103,242 @@
                         "type": "array",
                         "description": "该功能下可响应的命令集，支持 6 种类型，由 matches 的类型或 matches.type 决定。",
                         "items": {
-                            "required": [
-                                "type"
-                            ],
-                            "properties": {
-                                "type": {
-                                    "type": "string",
-                                    "description": "类型",
-                                    "enum": [
-                                        "text",
-                                        "key",
-                                        "regex",
-                                        "file",
-                                        "image",
-                                        "window",
-                                        "editor"
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "object",
+                                    "required": [
+                                        "type"
+                                    ],
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "description": "类型",
+                                            "enum": [
+                                                "text",
+                                                "key",
+                                                "regex",
+                                                "file",
+                                                "image",
+                                                "window",
+                                                "editor"
+                                            ]
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "description": "匹配名称"
+                                        }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "type": {
+                                                        "const": "text"
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "type": {
+                                                        "const": "text"
+                                                    },
+                                                    "text": {
+                                                        "type": "string",
+                                                        "description": "匹配文本"
+                                                    },
+                                                    "minLength": {
+                                                        "type": "number",
+                                                        "description": "最小匹配长度",
+                                                        "minimum": 1
+                                                    },
+                                                    "maxLength": {
+                                                        "type": "number",
+                                                        "description": "最大匹配长度",
+                                                        "minimum": 1,
+                                                        "maximum": 10000
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "type": {
+                                                        "const": "key"
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "type": {
+                                                        "const": "key"
+                                                    },
+                                                    "key": {
+                                                        "type": "string",
+                                                        "description": "匹配键值"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "type": {
+                                                        "const": "regex"
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "type": {
+                                                        "const": "regex"
+                                                    },
+                                                    "regex": {
+                                                        "type": "string",
+                                                        "description": "匹配正则"
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "description": "匹配标题"
+                                                    },
+                                                    "minLength": {
+                                                        "type": "number",
+                                                        "description": "最小匹配长度",
+                                                        "minimum": 1
+                                                    },
+                                                    "maxLength": {
+                                                        "type": "number",
+                                                        "description": "最大匹配长度",
+                                                        "minimum": 1,
+                                                        "maximum": 10000
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "type": {
+                                                        "const": "file"
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "type": {
+                                                        "const": "file"
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "description": "匹配标题"
+                                                    },
+                                                    "minCount": {
+                                                        "type": "number",
+                                                        "description": "最小匹配数量",
+                                                        "minimum": 1
+                                                    },
+                                                    "maxCount": {
+                                                        "type": "number",
+                                                        "description": "最大匹配数量",
+                                                        "minimum": 1,
+                                                        "maximum": 10000
+                                                    },
+                                                    "filterFileType": {
+                                                        "type": "string",
+                                                        "description": "文件类型",
+                                                        "enum": [
+                                                            "file",
+                                                            "directory"
+                                                        ]
+                                                    },
+                                                    "filterExtensions": {
+                                                        "type": "array",
+                                                        "description": "文件扩展名",
+                                                        "items": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "type": {
+                                                        "const": "image"
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "type": {
+                                                        "const": "image"
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "description": "匹配标题"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "type": {
+                                                        "const": "window"
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "type": {
+                                                        "const": "window"
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "description": "匹配标题"
+                                                    },
+                                                    "titleRegex": {
+                                                        "type": "string",
+                                                        "description": "匹配标题正则"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "type": {
+                                                        "const": "editor"
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "type": {
+                                                        "const": "editor"
+                                                    },
+                                                    "extensions": {
+                                                        "type": "array",
+                                                        "description": "文件扩展名",
+                                                        "items": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "faDataTypes": {
+                                                        "type": "array",
+                                                        "description": "FocusAny 数据类型",
+                                                        "items": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
                                     ]
-                                },
-                                "name": {
-                                    "type": "string",
-                                    "description": "匹配名称"
-                                }
-                            },
-                            "oneOf": [
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "type": {
-                                                "const": "text"
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "type": {
-                                                "const": "text"
-                                            },
-                                            "text": {
-                                                "type": "string",
-                                                "description": "匹配文本"
-                                            },
-                                            "minLength": {
-                                                "type": "number",
-                                                "description": "最小匹配长度",
-                                                "minimum": 1
-                                            },
-                                            "maxLength": {
-                                                "type": "number",
-                                                "description": "最大匹配长度",
-                                                "minimum": 1,
-                                                "maximum": 10000
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "type": {
-                                                "const": "key"
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "type": {
-                                                "const": "key"
-                                            },
-                                            "key": {
-                                                "type": "string",
-                                                "description": "匹配键值"
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "type": {
-                                                "const": "regex"
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "type": {
-                                                "const": "regex"
-                                            },
-                                            "regex": {
-                                                "type": "string",
-                                                "description": "匹配正则"
-                                            },
-                                            "title": {
-                                                "type": "string",
-                                                "description": "匹配标题"
-                                            },
-                                            "minLength": {
-                                                "type": "number",
-                                                "description": "最小匹配长度",
-                                                "minimum": 1
-                                            },
-                                            "maxLength": {
-                                                "type": "number",
-                                                "description": "最大匹配长度",
-                                                "minimum": 1,
-                                                "maximum": 10000
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "type": {
-                                                "const": "file"
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "type": {
-                                                "const": "file"
-                                            },
-                                            "title": {
-                                                "type": "string",
-                                                "description": "匹配标题"
-                                            },
-                                            "minCount": {
-                                                "type": "number",
-                                                "description": "最小匹配数量",
-                                                "minimum": 1
-                                            },
-                                            "maxCount": {
-                                                "type": "number",
-                                                "description": "最大匹配数量",
-                                                "minimum": 1,
-                                                "maximum": 10000
-                                            },
-                                            "filterFileType": {
-                                                "type": "string",
-                                                "description": "文件类型",
-                                                "enum": [
-                                                    "file",
-                                                    "directory"
-                                                ]
-                                            },
-                                            "filterExtensions": {
-                                                "type": "array",
-                                                "description": "文件扩展名",
-                                                "items": {
-                                                    "type": "string"
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "type": {
-                                                "const": "image"
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "type": {
-                                                "const": "image"
-                                            },
-                                            "title": {
-                                                "type": "string",
-                                                "description": "匹配标题"
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "type": {
-                                                "const": "window"
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "type": {
-                                                "const": "window"
-                                            },
-                                            "title": {
-                                                "type": "string",
-                                                "description": "匹配标题"
-                                            },
-                                            "titleRegex": {
-                                                "type": "string",
-                                                "description": "匹配标题正则"
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "type": {
-                                                "const": "editor"
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "type": {
-                                                "const": "editor"
-                                            },
-                                            "extensions": {
-                                                "type": "array",
-                                                "description": "文件扩展名",
-                                                "items": {
-                                                    "type": "string"
-                                                }
-                                            },
-                                            "faDataTypes": {
-                                                "type": "array",
-                                                "description": "FocusAny 数据类型",
-                                                "items": {
-                                                    "type": "string"
-                                                }
-                                            }
-                                        }
-                                    }
                                 }
                             ]
                         }
@@ -368,7 +376,25 @@
                 "previewDoc": {
                     "type": "string",
                     "description": "插件预览文档，参照插件选择根目录，默认为 preview.md，使用 markdown 格式，每行一个图片链接。"
+                },
+                "keepCodeDevTools": {
+                    "type": "boolean",
+                    "description": "是否在code执行完成后保留开发者窗口（便于调试）"
+                },
+                "showFastPanelDevTools": {
+                    "type": "boolean",
+                    "description": "是否在view中显示开发者窗口（便于调试）"
                 }
+            }
+        },
+        "permissions": {
+            "type": "array",
+            "description": "插件权限",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "ClipboardManage"
+                ]
             }
         },
         "setting": {
@@ -378,6 +404,21 @@
                     "type": "boolean",
                     "description": "是否默认分离模式打开"
                 },
+                "detachPosition": {
+                    "type": "string",
+                    "description": "分离模式默认位置",
+                    "enum": [
+                        "center",
+                        "left-top",
+                        "right-top",
+                        "left-bottom",
+                        "right-bottom"
+                    ]
+                },
+                "detachAlwaysOnTop": {
+                    "type": "boolean",
+                    "description": "分离模式默认是否置顶"
+                },
                 "height": {
                     "type": "string",
                     "description": "窗口高度，支持 数字 或 百分比，设置后窗口大小将默认为分离模式"
@@ -386,13 +427,13 @@
                     "type": "string",
                     "description": "窗口宽度，支持 数字 或 百分比，设置后窗口大小将默认为分离模式"
                 },
-                "keepCodeDevTools": {
-                    "type": "boolean",
-                    "description": "是否在执行完成后保留开发者窗口（便于调试）"
+                "heightFastPanel": {
+                    "type": "string",
+                    "description": "快速面板高度，单位为像素，默认为 100"
                 },
                 "singleton": {
                     "type": "boolean",
-                    "description": "是否只允许打开一个窗口"
+                    "description": "是否只允许打开一个窗口，默认为 true"
                 },
                 "zoom": {
                     "type": "number",
