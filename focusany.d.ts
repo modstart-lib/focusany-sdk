@@ -21,7 +21,9 @@ interface DbReturn {
 
 declare type PlatformType = 'win' | 'osx' | 'linux'
 
-declare type PluginEvent = 'ClipboardChange'
+declare type EditionType = 'open' | 'pro'
+
+declare type PluginEvent = 'ClipboardChange' | 'UserChange'
 
 declare type ActionMatch = (
     ActionMatchText
@@ -137,11 +139,24 @@ interface FocusAnyApi {
     onPluginExit(callback: Function): void;
 
     /**
-     * 插件事件触发
+     * 插件事件监听
      * @param event
      * @param callback
      */
     onPluginEvent(event: PluginEvent, callback: (data: any) => void): void;
+
+    /**
+     * 插件事件解绑
+     * @param event
+     * @param callback
+     */
+    offPluginEvent(event: PluginEvent, callback: (data: any) => void): void;
+
+    /**
+     * 插件事件解绑全部
+     * @param event
+     */
+    offPluginEventAll(event: PluginEvent): void;
 
     /**
      * 插件主窗口是否显示
@@ -249,19 +264,40 @@ interface FocusAnyApi {
     isDarkColors(): boolean;
 
     /**
+     * 显示用户登录对话框
+     */
+    showUserLogin(): void;
+
+    /**
      * 获取用户
      */
     getUser(): {
+        isLogin: boolean,
         avatar: string,
         nickname: string,
         vipFlag: string,
         deviceCode: string
-    } | null;
+    };
 
     /**
      * 获取用户服务端临时令牌
      */
     getUserAccessToken(): Promise<{ token: string, expireAt: number }>;
+
+    /**
+     * 列出插件商品
+     * @param query
+     */
+    listGoods(query?: {
+        ids?: string[]
+    }): Promise<{
+        id: string,
+        title: string,
+        cover: string,
+        priceType: 'fixed' | 'dynamic',
+        fixedPrice: string,
+        description: string,
+    }[]>;
 
     /**
      * 创建订单并显示
@@ -336,6 +372,19 @@ interface FocusAnyApi {
              */
             status: 'Paid' | 'Unpaid',
         }[]
+    }>;
+
+    /**
+     * 请求官方接口
+     */
+    apiPost(
+        url: string,
+        body: any,
+        option: {}
+    ): Promise<{
+        code: number,
+        msg: string,
+        data: any,
     }>;
 
     /**
